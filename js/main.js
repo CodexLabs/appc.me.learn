@@ -1,7 +1,8 @@
 (function (context) {
+    var cacheID = 1;
     var totalSteps = 11;
     var lastStep = 0;
-    
+
     var editor = context.ace.edit('code');
     var JavaScriptMode = require("ace/mode/javascript").Mode;
     editor.getSession().setMode(new JavaScriptMode());
@@ -29,7 +30,7 @@
     function loadStep(step) {
         lastStep = step;
         $.ajax({
-            url: 'steps/' + step + '.js',
+            url: 'steps/' + step + '.js?cacheID=' + cacheID /* force a refresh of the JS when we have updated them */,
             success: function (data) {
                 if (lastStep === step) {
                     loadCode(data);
