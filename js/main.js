@@ -1,6 +1,6 @@
 (function (context) {
     var cacheID = 1;
-    var totalSteps = 11;
+    var totalSteps = 12;
     var lastStep = 0;
 
     var editor = context.ace.edit('code');
