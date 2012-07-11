@@ -1,6 +1,13 @@
 (function (context) {
     var totalSteps = 11;
     var lastStep = 0;
+    
+    var editor = context.ace.edit('code');
+    var JavaScriptMode = require("ace/mode/javascript").Mode;
+    editor.getSession().setMode(new JavaScriptMode());
+    editor.setTheme("ace/theme/twilight");
+    editor.setShowFoldWidgets(false);
+    editor.setFontSize(16);
 
     var hash = window.location.hash;
     if (hash) {
@@ -14,13 +21,6 @@
     else {
         loadStep(1);
     }
-
-    var editor = context.ace.edit('code');
-    var JavaScriptMode = require("ace/mode/javascript").Mode;
-    editor.getSession().setMode(new JavaScriptMode());
-    editor.setTheme("ace/theme/twilight");
-    editor.setShowFoldWidgets(false);
-    editor.setFontSize(16);
 
     $('#app').hide();
 
@@ -45,19 +45,23 @@
     }
 
     function executeCode() {
-        _cleaner();
-        _executor(editor.getSession().getValue() || $('#code').val());
+        _cleaner && _cleaner();
+        _executor && _executor(editor.getSession().getValue() || $('#code').val());
     }
 
     function saveCode() {
-        window.location.hash = 'code=' + Base64.encode(editor.getSession().getValue() || $('#code').val());
+        window.location.hash = 'step=' + getCurrentStep() + '&code=' + Base64.encode(editor.getSession().getValue() || $('#code').val());
         alert('Saved! Bookmark or share this page\'s URL.');
     }
 
     function getCurrentStep(adjust) {
         var hash = window.location.hash;
-        var step = parseInt(hash.substr(hash.indexOf('step=') + 5).split('&')[0] || 1, 10);
-        if (step === NaN || step <= 0) {
+        var stepIndex = hash.indexOf('step=');
+        var step = lastStep;
+        if (stepIndex >= 0) {
+            step = parseInt(hash.substr(stepIndex + 5).split('&')[0] || 1, 10);
+        }
+        if (isNaN(step) || step <= 0) {
             step = lastStep;
         }
         return Math.max(Math.min(step + (adjust || 0), totalSteps), 1);
