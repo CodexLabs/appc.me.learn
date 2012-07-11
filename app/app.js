@@ -12,4 +12,5 @@ function execute(code) {
 
 function clean() {
     document.getElementById("TiUIContainer").innerHTML = '';
+    // TODO: we need to be more thorough with this. What if they setInterval, etc?
 }
